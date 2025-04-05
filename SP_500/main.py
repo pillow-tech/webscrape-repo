@@ -37,6 +37,17 @@ def extract_details(stock_symbols):
         stock_arr.append(stock_values)
     return stock_arr
 
+def write_csv(sp_500, sp_details):
+    
+    with open('results.csv', 'w') as csvfile:
+        csvWriter = csv.writer(csvfile, delimiter = '|')
+        header = ['Name','Previous Close', 'Open', 'Bid', 'Ask', "Day's Range", '52 Week Range', 'Volume', 'Avg. Volume', 'Market Cap (intraday)', 'Beta (5Y Monthly)', 'PE Ratio (TTM)', 'EPS (TTM)', 'Earnings Date', 'Forward Dividend & Yield', 'Ex-Dividend Date', '1y Target Est']
+        csvWriter.writerow(header)
+        
+        for i in range(len(sp_500)):
+            csvWriter.writerow([sp_500[i]]+sp_details[i])
 
 if __name__ == "__main__":
     sp_500 = get_SP500()
+    sp_details = extract_details(sp_500)
+    write_csv(sp_500,sp_details)
