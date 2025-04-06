@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 def get_SP500():
     logging.info("Extracting S&P 500 Companies List ")
     source_url = "https://www.slickcharts.com/sp500"
-    headers = {'User-agent': 'Not a bot'}
+    headers = {'User-agent': 'Mozilla/5.0'}
 
     logging.info(f"Source URL: {source_url}")
 
@@ -18,19 +18,23 @@ def get_SP500():
     symbols_arr = []
     for row in rows:
         symbol = row.contents[5].text
+        
+        if '.' in symbol:
+            symbol = symbol.replace('.','-')
+
         symbols_arr.append(symbol)
     logging.info("Extract List Complete")
     return symbols_arr
 
 def extract_details(stock_symbols):
-    logging.info("Extracting Stock Details")
+    logging.info("Extracting Stock Details in Yahoo Finance")
     stock_arr = []
     i = 0
     for symbol in stock_symbols:
         logging.info(f"{symbol}: {i+1}/{len(stock_symbols)}")
         stock_values = []
         url = "https://finance.yahoo.com/quote/" + symbol
-        headers = {'User-agent': 'Not a bot'}
+        headers = {'User-agent': 'Mozilla/5.0'}
 
         response = requests.get(url, headers= headers)
         soup = BeautifulSoup(response.text, features="html.parser")
